@@ -111,3 +111,47 @@ const Navbar = () => (
     </Nav.Item>
   </Nav>
 );
+
+const HomePage = ({ totals, setTransactions }) => {
+  const [showModal, setShowModal] = useState(false);
+
+  const addTransaction = (newTransaction) => {
+    setTransactions (prev => {
+      const updated = [...prev,  newTransaction];
+      return updated.sort ((a, b) => new Date(b.date) - new Date(a.date));
+    });
+  };
+  
+  return (
+    <div className="container mt-4">
+      <h1 className="text-center mb-4">Budget Planner</h1>
+      
+      <div className="row mb-4">
+        <SummaryCard title="Income" amount={totals.income} variant="success" />
+        <SummaryCard title="Expenses" amount={totals.expenses} variant="danger" />
+        <SummaryCard title="Remaining" amount={totals.remaining} variant="primary" />
+      </div>
+
+      <h2 className="mb-3">Categories</h2>
+      <div className="row g-3">
+        {Object.entries(totals.categories).map(([category, amount]) => (
+          <CategoryCard key={category} category={category} amount={amount} />
+        ))}
+      </div>
+
+      <TransactionModal
+        show={showModal}
+        handleClose={() => setShowModal(false)}
+        handleSave={addTransaction}
+      />
+
+      <Button
+        variant="primary"
+        className="floating-btn"
+        onClick={() => setShowModal(true)}
+      >
+        +
+      </Button>
+    </div>
+  );
+};
