@@ -37,23 +37,18 @@ const App = () => {
         income: 0,
         expense: 0,
         remaining: 0,
-        categories: {
-          shopping: 0,
-          drinks: 0,
-          entertainment: 0,
-          income: 0,
-        },
+        categories: {},
       };
     }
-
+  
     return transactions.reduce(
       (acc, transaction) => {
         if (transaction.type === "income") {
           acc.income += transaction.amount;
-          acc.categories.income += transaction.amount;
+          acc.categories.income = (acc.categories.income || 0) + transaction.amount;
         } else {
           acc.expense += transaction.amount;
-          acc.categories[transaction.category] += transaction.amount;
+          acc.categories[transaction.category] = (acc.categories[transaction.category] || 0) + transaction.amount;
         }
         acc.remaining = acc.income - acc.expense;
         return acc;
@@ -62,12 +57,7 @@ const App = () => {
         income: 0,
         expense: 0,
         remaining: 0,
-        categories: {
-          shopping: 0,
-          drinks: 0,
-          entertainment: 0,
-          income: 0,
-        },
+        categories: {},
       }
     );
   };
@@ -76,7 +66,7 @@ const App = () => {
 
   return (
     <Router>
-      <NavBar />
+      <Navbar />
       <Routes>
         <Route
           path="/"
@@ -128,7 +118,7 @@ const HomePage = ({ totals, setTransactions }) => {
       
       <div className="row mb-4">
         <SummaryCard title="Income" amount={totals.income} variant="success" />
-        <SummaryCard title="Expenses" amount={totals.expenses} variant="danger" />
+        <SummaryCard title="Expenses" amount={totals.expense} variant="danger" />
         <SummaryCard title="Remaining" amount={totals.remaining} variant="primary" />
       </div>
 
@@ -162,7 +152,7 @@ const SummaryCard = ({ title, amount, variant }) => (
       <Card.Body className="text-center">
         <Card.Title>{title}</Card.Title>
         <Card.Text className={`display-6 text-${variant}`}>
-          ${amount.toFixed(2)}
+          ${amount && !isNaN(amount) ? amount.toFixed(2) : "0.00"}
         </Card.Text>
       </Card.Body>
     </Card>
@@ -182,7 +172,7 @@ const CategoryCard = ({ category, amount }) => (
 
 const HistoryPage = ({ transactions }) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 4;
   const totalPages = Math.ceil(transactions.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
 
