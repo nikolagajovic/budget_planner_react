@@ -180,5 +180,34 @@ const CategoryCard = ({ category, amount }) => (
   </div>
 );
 
+const HistoryPage = ({ transactions }) => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+  const totalPages = Math.ceil(transactions.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+
+  return (
+    <div className="container mt-4">
+      <h2 className="mb-4">Transaction History</h2>
+      
+      {transactions.slice(startIndex, startIndex + itemsPerPage).map((transaction, index) => (
+        <TransactionItem key={index} transaction={transaction} />
+      ))}
+
+      <Pagination className="justify-content-center mt-4">
+        <Pagination.Prev
+          disabled={currentPage === 1}
+          onClick={() => setCurrentPage(currentPage - 1)}
+        />
+        <Pagination.Item active>{currentPage}</Pagination.Item>
+        <Pagination.Next
+          disabled={currentPage === totalPages}
+          onClick={() => setCurrentPage(currentPage + 1)}
+        />
+      </Pagination>
+    </div>
+  );
+};
+
 
 export default App;
