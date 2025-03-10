@@ -155,3 +155,30 @@ const HomePage = ({ totals, setTransactions }) => {
     </div>
   );
 };
+
+const SummaryCard = ({ title, amount, variant }) => (
+  <div className="col-md-4 mb-3">
+    <Card border={variant} className="h-100">
+      <Card.Body className="text-center">
+        <Card.Title>{title}</Card.Title>
+        <Card.Text className={`display-6 text-${variant}`}>
+          ${amount.toFixed(2)}
+        </Card.Text>
+      </Card.Body>
+    </Card>
+  </div>
+);
+
+const CategoryCard = ({ category, amount }) => (
+  <div className="col-md-4">
+    <Card className="h-100">
+      <Card.Body>
+        <Card.Title className="text-capitalize">{category}</Card.Title>
+        <Card.Text className="fs-4">${amount.toFixed(2)}</Card.Text>
+      </Card.Body>
+    </Card>
+  </div>
+);
+
+
+export default App;
