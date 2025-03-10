@@ -1,0 +1,40 @@
+.floating-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50% !important;
+    font-size: 24px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .card {
+    transition: transform 0.2s;
+    min-height: 150px;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .nav-link {
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
+  
+  .transaction-item {
+    transition: transform 0.2s;
+  }
+  
+  .transaction-item:hover {
+    transform: scale(1.02);
+  }
+  
+  .container {
+    max-width: 1200px;
+    padding-bottom: 80px;
+  }
