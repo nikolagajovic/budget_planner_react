@@ -25,7 +25,7 @@ const App = () => {
 
   useEffect(() => {
     try {
-      loacalStorage.setItem("budgetData", JSON.stringify(transactions ));
+      localStorage.setItem("budgetData", JSON.stringify(transactions ));
     } catch (error) {
       console.error("Error saving transactions:", error);
     }
