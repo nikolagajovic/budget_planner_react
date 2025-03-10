@@ -25,7 +25,7 @@ const App = () => {
 
   useEffect(() => {
     try {
-      loacalStorage.setItem("budgetData", JSON.stringify({ transactions }));
+      loacalStorage.setItem("budgetData", JSON.stringify(transactions ));
     } catch (error) {
       console.error("Error saving transactions:", error);
     }
@@ -206,6 +206,121 @@ const HistoryPage = ({ transactions }) => {
         />
       </Pagination>
     </div>
+  );
+};
+
+const TransactionItem = ({ transaction }) => (
+  <Card className="mb-3">
+    <Card.Body>
+      <div className="d-flex justify-content-between align-items-center">
+        <div>
+          <h5 className={`text-${transaction.type === 'income' ? 'success' : 'danger'}`}>
+            {transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1)}
+          </h5>
+          <p className="mb-1">Category: {transaction.category}</p>
+          <p className="mb-1">Note: {transaction.note || 'N/A'}</p>
+          <small className="text-muted">
+            {new Date(transaction.date).toLocaleDateString()}
+          </small>
+        </div>
+        <h4 className={`text-${transaction.type === 'income' ? 'success' : 'danger'}`}>
+          ${transaction.amount.toFixed(2)}
+        </h4>
+      </div>
+    </Card.Body>
+  </Card>
+);
+
+const TransactionModal = ({ show, handleClose, handleSave }) => {
+  const [amount, setAmount] = useState('');
+  const [type, setType] = useState('expense');
+  const [category, setCategory] = useState('shopping');
+  const [note, setNote] = useState('');
+
+  const handleSubmit = () => {
+    if (!amount || isNaN(amount)) return;
+    handleSave({
+      amount: parseFloat(amount),
+      type,
+      category: type === 'income' ? 'income' : category,
+      note,
+      date: new Date().toISOString(),
+    });
+    handleClose();
+    setAmount('');
+    setNote('');
+  };
+
+  return (
+    <Modal show={show} onHide={handleClose}>
+      <Modal.Header closeButton>
+        <Modal.Title>New Transaction</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <div className="mb-3">
+          <label>Amount</label>
+          <div className="input-group">
+            <input
+              type="number"
+              className="form-control"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+            />
+            <span className="input-group-text">$</span>
+          </div>
+        </div>
+
+        <div className="mb-3">
+          <div className="btn-group w-100">
+            <Button
+              variant={type === 'expense' ? 'primary' : 'outline-primary'}
+              onClick={() => setType('expense')}
+            >
+              Expense
+            </Button>
+            <Button
+              variant={type === 'income' ? 'primary' : 'outline-primary'}
+              onClick={() => setType('income')}
+            >
+              Income
+            </Button>
+          </div>
+        </div>
+
+        {type === 'expense' ? (
+          <select
+            className="form-select mb-3"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          >
+            <option value="shopping">Shopping</option>
+            <option value="food">Food</option>
+            <option value="drinks">Drinks</option>
+            <option value="entertainment">Entertainment</option>
+          </select>
+        ) : (
+          <select className="form-select mb-3" disabled>
+            <option>Income</option>
+          </select>
+        )}
+
+        <input
+          type="text"
+          className="form-control mb-3"
+          placeholder="Note"
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+        />
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={handleClose}>
+          Close
+        </Button>
+        <Button variant="primary" onClick={handleSubmit}>
+          Save Transaction
+        </Button>
+      </Modal.Footer>
+    </Modal>
   );
 };
 
